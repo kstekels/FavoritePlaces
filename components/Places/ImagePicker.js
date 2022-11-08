@@ -7,7 +7,7 @@ import {
 import { useState } from 'react';
 import { Colors } from '../../constants/colors';
 import OutlinedButton from '../ui/OutlinedButton';
-const ImagePicker = () => {
+const ImagePicker = ({ onTakeImage }) => {
   const [pickedImage, setPickedImage] = useState();
 
   const [cameraPermissionInformation, requestPermission] =
@@ -26,10 +26,12 @@ const ImagePicker = () => {
       );
       return false;
     }
+    return true;
   }
 
   const imageHandler = async () => {
     const hasPermission = await verifyPermissions();
+    console.log('Permission: ', hasPermission);
 
     if (!hasPermission) {
       return;
@@ -41,6 +43,7 @@ const ImagePicker = () => {
       quality: 0.5,
     });
     setPickedImage(image.uri);
+    onTakeImage(image.uri);
   };
 
   let imgPreview = <Text>No image taken yet.</Text>;
@@ -71,5 +74,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+    borderRadius: 4,
+    overflow: 'hidden',
   },
 });
